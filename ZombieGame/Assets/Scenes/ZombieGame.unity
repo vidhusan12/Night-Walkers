@@ -789,7 +789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ec4c02438c304fd297d63e83bfa3702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 7
+  walkSpeed: 8
   sprintSpeed: 10
   groundDrag: 5
   state: 0
