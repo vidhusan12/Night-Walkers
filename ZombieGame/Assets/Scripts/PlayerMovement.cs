@@ -5,13 +5,19 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed;
+    private float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
 
 
 
     public float groundDrag;
+    public MovementState state;
+
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchYScale;
+    public float startYScale;
 
     [Header("Jump")]
     public float jumpForce;
@@ -22,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode crouchKey = KeyCode.LeftControl;
 
 
     [Header("Ground Check")]
@@ -37,12 +44,16 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
     Rigidbody rb;
 
+
+
     public void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
         readyToJump = true;
+
+        startYScale = transform.localScale.y;
     }
 
     public void Update()
@@ -50,8 +61,10 @@ public class PlayerMovement : MonoBehaviour
         //ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
+        //Calling the functions
         MyInput();
         SpeedControl();
+        StateHandler();
 
         //handle drag
         if (grounded)
@@ -79,6 +92,19 @@ public class PlayerMovement : MonoBehaviour
 
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
+        }
+
+        //start crouch
+        if (Input.GetKeyDown(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        }
+
+        //stop crouch
+        if (Input.GetKeyUp(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
 
@@ -118,5 +144,37 @@ public class PlayerMovement : MonoBehaviour
     public void ResetJump()
     {
         readyToJump = true;
+    }
+
+    public enum MovementState
+    {
+        walking, sprinting, crouching, air
+    }
+
+    public void StateHandler()
+    {
+        //checking if the player is crouching
+        if (Input.GetKey(crouchKey))
+        {
+            state = MovementState.crouching;
+            moveSpeed = crouchSpeed;
+        }
+        //spriting
+        if(grounded && Input.GetKey(sprintKey))
+        {
+            state = MovementState.sprinting;
+            moveSpeed = sprintSpeed;
+        }
+        //walking
+        else if (grounded)
+        {
+            state = MovementState.walking;
+            moveSpeed = walkSpeed;
+        }
+        //air
+        else
+        {
+            state = MovementState.air;
+        }
     }
 }
