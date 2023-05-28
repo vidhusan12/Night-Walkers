@@ -80,6 +80,8 @@ public class Guns : MonoBehaviour
         muzzleEffect.GetComponent<ParticleSystem>().Play();
         animator.SetTrigger("RECOIL");
 
+        SoundManger.Instance.shootingSoundM1911.Play();
+
         readyToFire = false;
 
         // Calculate the firing direction with spread
