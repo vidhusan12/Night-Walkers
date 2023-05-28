@@ -8,7 +8,7 @@ shooting functionality inculding differnt shooting modes and bullet behavior;
 
 public class Guns : MonoBehaviour
 {
-    public Camera playerCamera;
+ 
 
     // Firing
     public bool isFiring;
@@ -28,6 +28,9 @@ public class Guns : MonoBehaviour
     public Transform projectileSpawn;
     public float projectileSpeed;
     public float projectileLifetime = 3f; // seconds
+
+    //Muzzle Effect
+    public GameObject muzzleEffect;
 
     public enum FiringMode
     {
@@ -71,6 +74,9 @@ public class Guns : MonoBehaviour
     // Fire the weapon
     private void FireWeapon()
     {
+        //Activiting the muzzle
+        muzzleEffect.GetComponent<ParticleSystem>().Play();
+
         readyToFire = false;
 
         // Calculate the firing direction with spread
@@ -121,7 +127,7 @@ public class Guns : MonoBehaviour
     public Vector3 CalculateDirectionAndSpread()
     {
         // Fire from the center of the screen to check where we are aiming
-        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
         Vector3 targetPoint;
 
