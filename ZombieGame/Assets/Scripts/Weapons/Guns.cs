@@ -29,8 +29,9 @@ public class Guns : MonoBehaviour
     public float projectileSpeed;
     public float projectileLifetime = 3f; // seconds
 
-    //Muzzle Effect
+    //References
     public GameObject muzzleEffect;
+    private Animator animator;
 
     public enum FiringMode
     {
@@ -46,6 +47,7 @@ public class Guns : MonoBehaviour
     {
         readyToFire = true;
         currentBurst = projectilesPerBurst;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -76,6 +78,7 @@ public class Guns : MonoBehaviour
     {
         //Activiting the muzzle
         muzzleEffect.GetComponent<ParticleSystem>().Play();
+        animator.SetTrigger("RECOIL");
 
         readyToFire = false;
 
