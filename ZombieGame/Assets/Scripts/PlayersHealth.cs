@@ -9,6 +9,7 @@ public class PlayersHealth : MonoBehaviour
     public int currentHealth;
     public HealthBar healthBar;
     private bool isRegenerating = false;
+    private bool isBeingHit = false;
 
     // Start is called before the first frame update
     void Start()
@@ -27,11 +28,12 @@ public class PlayersHealth : MonoBehaviour
             Die();
         }
 
-        else if (!isRegenerating)
+        else if (!isRegenerating && !isBeingHit)
         {
             isRegenerating = true;
             Invoke("RegenerateHealth", 3f);
         }
+        isBeingHit = true;
     }
 
     void RegenerateHealth()
@@ -44,8 +46,12 @@ public class PlayersHealth : MonoBehaviour
     void Die()
     {
         Time.timeScale = 0;
-
         Debug.Log("Player has died");
+    }
+
+    void StopBeingHit()
+    {
+        isBeingHit = false;
     }
 
     // Update is called once per frame
@@ -54,6 +60,11 @@ public class PlayersHealth : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G))
         {
             TakeDamage(15);
+        }
+
+        if (Input.GetKeyUp(KeyCode.G))
+        {
+            StopBeingHit();
         }
     }
 }
