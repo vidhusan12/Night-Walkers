@@ -67,6 +67,13 @@ public class Guns : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
+        // if Bullets are 0 then play the empty sound
+        if(bulletsLeft == 0 && isFiring)
+        {
+            SoundManger.Instance.emptyMagazineSoundM1911.Play();
+        }
+
+
         // Check the firing mode and input to determine if firing
         if (currentFiringMode == FiringMode.Auto)
         {
@@ -88,7 +95,7 @@ public class Guns : MonoBehaviour
         // If you want to automatically reload when magazine is empty
         if(readyToFire && isFiring == false && isReloading == false && bulletsLeft <= 0)
         {
-            Reload();
+            //Reload();
         }
 
         // If ready to fire and input is firing, shoot the weapon
@@ -196,6 +203,9 @@ public class Guns : MonoBehaviour
     //Reloading method
     private void Reload()
     {
+        //Play the Reload sound
+        SoundManger.Instance.reloadingSoundM1911.Play();
+
         isReloading = true;
         Invoke("ReloadCompleted", reloadTime);
     }
