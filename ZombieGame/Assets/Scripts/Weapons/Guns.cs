@@ -53,6 +53,15 @@ public class Guns : MonoBehaviour
         Auto
     }
 
+    public enum WeaponModel
+    {
+        AK74,
+        M1911
+    }
+
+    public WeaponModel thisWeaponModel;
+
+
     public FiringMode currentFiringMode;
 
     // Initialize the gun controller
@@ -123,7 +132,8 @@ public class Guns : MonoBehaviour
         muzzleEffect.GetComponent<ParticleSystem>().Play();
         animator.SetTrigger("RECOIL");
 
-        SoundManger.Instance.shootingSoundM1911.Play();
+        //SoundManger.Instance.shootingSoundM1911.Play();
+        SoundManger.Instance.PlayShootingSound(thisWeaponModel);
 
         readyToFire = false;
 
@@ -204,7 +214,9 @@ public class Guns : MonoBehaviour
     private void Reload()
     {
         //Play the Reload sound
-        SoundManger.Instance.reloadingSoundM1911.Play();
+   
+        SoundManger.Instance.PlayReloadingSound(thisWeaponModel);
+        animator.SetTrigger("RELOAD");
 
         isReloading = true;
         Invoke("ReloadCompleted", reloadTime);
