@@ -9,6 +9,7 @@ shooting functionality inculding differnt shooting modes and bullet behavior;
 
 public class Guns : MonoBehaviour
 {
+    public bool isActiveWeapon;
 
     [Header("Firing")]
     // Firing
@@ -44,7 +45,10 @@ public class Guns : MonoBehaviour
     //References
     [Header("References")]
     public GameObject muzzleEffect;
-    private Animator animator;
+    internal Animator animator;
+
+    public Vector3 spawnPosition;
+    public Vector3 spawnRotation;
 
     public enum FiringMode
     {
@@ -76,48 +80,54 @@ public class Guns : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        // if Bullets are 0 then play the empty sound
-        if(bulletsLeft == 0 && isFiring)
-        {
-            SoundManger.Instance.emptyMagazineSoundM1911.Play();
-        }
+        GetComponent<Outline>().enabled = false;
 
 
-        // Check the firing mode and input to determine if firing
-        if (currentFiringMode == FiringMode.Auto)
+        if (isActiveWeapon)
         {
-            // Holding down the left mouse button
-            isFiring = Input.GetKey(KeyCode.Mouse0);
-        }
-        else if (currentFiringMode == FiringMode.Single || currentFiringMode == FiringMode.Burst)
-        {
-            // Clicking the left mouse button once
-            isFiring = Input.GetKeyDown(KeyCode.Mouse0);
-        }
+            // if Bullets are 0 then play the empty sound
+            if (bulletsLeft == 0 && isFiring)
+            {
+                SoundManger.Instance.emptyMagazineSoundM1911.Play();
+            }
 
-        // If bullet is less then the magazineSize and R is pressed then reload
-        if(Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
-        {
-            Reload();
-        }
 
-        // If you want to automatically reload when magazine is empty
-        if(readyToFire && isFiring == false && isReloading == false && bulletsLeft <= 0)
-        {
-            //Reload();
-        }
+            // Check the firing mode and input to determine if firing
+            if (currentFiringMode == FiringMode.Auto)
+            {
+                // Holding down the left mouse button
+                isFiring = Input.GetKey(KeyCode.Mouse0);
+            }
+            else if (currentFiringMode == FiringMode.Single || currentFiringMode == FiringMode.Burst)
+            {
+                // Clicking the left mouse button once
+                isFiring = Input.GetKeyDown(KeyCode.Mouse0);
+            }
 
-        // If ready to fire and input is firing, shoot the weapon
-        if (readyToFire && isFiring && bulletsLeft > 0)
-        {
-            currentBurst = projectilesPerBurst;
-            FireWeapon();
-        }
+            // If bullet is less then the magazineSize and R is pressed then reload
+            if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
+            {
+                Reload();
+            }
 
-        // Update the UI according to amount of bullets left
-        if(AmmoManger.Instance.ammoDisplay != null)
-        {
-            AmmoManger.Instance.ammoDisplay.text = $"{bulletsLeft/projectilesPerBurst}/{magazineSize/projectilesPerBurst}";
+            // If you want to automatically reload when magazine is empty
+            if (readyToFire && isFiring == false && isReloading == false && bulletsLeft <= 0)
+            {
+                //Reload();
+            }
+
+            // If ready to fire and input is firing, shoot the weapon
+            if (readyToFire && isFiring && bulletsLeft > 0)
+            {
+                currentBurst = projectilesPerBurst;
+                FireWeapon();
+            }
+
+            // Update the UI according to amount of bullets left
+            if (AmmoManger.Instance.ammoDisplay != null)
+            {
+                AmmoManger.Instance.ammoDisplay.text = $"{bulletsLeft / projectilesPerBurst}/{magazineSize / projectilesPerBurst}";
+            }
         }
 
     }
