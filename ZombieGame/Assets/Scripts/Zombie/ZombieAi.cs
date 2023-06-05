@@ -5,18 +5,18 @@ using UnityEngine.AI;
 
 public class ZombieAi : MonoBehaviour
 {
-    private NavMeshAgent agent;
-    private Transform target;
+    NavMeshAgent agent;
+    public Transform target;
 
     public void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        target = GameObject.Find("Player").transform;
+        agent.SetDestination(target.position);
     }
 
     public void Update()
     {
-        agent.SetDestination(target.position);
+        
     }
 
 }
