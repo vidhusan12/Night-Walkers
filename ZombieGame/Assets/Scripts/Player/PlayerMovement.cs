@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region
+    public static Transform instance;
+
+    public void Awake()
+    {
+        instance = this.transform;
+    }
+    #endregion
+
+
     [Header("Movement")]
     //Movement speed variables
     [SerializeField] private float moveSpeed;
@@ -15,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump")]
     //Jump variables
     [SerializeField] private float jumpForce;
+    private bool hasJumped = false;
 
     [Header("Gravity")]
     //Gravity varaibles
@@ -73,7 +84,12 @@ public class PlayerMovement : MonoBehaviour
     private void CheckIfGrounded()
     {
         //Checks if the player is on the ground
-        isPlayerGrounded = Physics.CheckSphere(transform.position, groundDistance);
+        isPlayerGrounded = Physics.CheckSphere(transform.position, groundDistance, groundMask);
+
+        if (isPlayerGrounded)
+        {
+            hasJumped = false;
+        }
     }
 
     //Handles the player gravity
@@ -97,6 +113,8 @@ public class PlayerMovement : MonoBehaviour
         {
             //Calculate Jump velocity and apply it when Space is pressed and the player is grounded
             velocity.y += Mathf.Sqrt(jumpForce * -2f * gravity);
+            hasJumped = true;
+            
         }
     }
 

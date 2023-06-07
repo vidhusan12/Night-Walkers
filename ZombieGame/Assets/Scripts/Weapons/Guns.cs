@@ -203,6 +203,16 @@ public class Guns : MonoBehaviour
         {
             //Hitting Something
             targetPoint = hit.point;
+            if(hit.transform.tag == "Target")
+            {
+                PlayerStatus ZombiesStatus = hit.transform.GetComponent<PlayerStatus>();
+                if(ZombiesStatus != null)
+                {
+                    int damageAmount = 10;
+                    ZombiesStatus.TakeDamage(damageAmount);
+                }
+                
+            }
         }
         else
         {
